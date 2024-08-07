@@ -1,0 +1,21 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import ClientProfile from '../../components/ClientProfile.svelte';
+import { pb } from '../../lib/pocketbase';
+
+const { id } = Astro.params;
+const isLoggedIn = pb.authStore.isValid;
+---
+
+<MainLayout>
+  <h1>Client Profile</h1>
+  {
+    isLoggedIn ? (
+      <ClientProfile client:load clientId={id} />
+    ) : (
+      <p>
+        Please <a href="/">log in</a> to view client profiles.
+      </p>
+    )
+  }
+</MainLayout>

@@ -1,0 +1,38 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { pb } from '../../lib/pocketbase';
+import type { ClientsResponse } from '../../pocketbase-types';
+
+const isLoggedIn = pb.authStore.isValid;
+
+let clients: ClientsResponse[] = [];
+
+if (isLoggedIn) {
+  const resultList = await pb.collection('clients').getList(1, 50, {
+    sort: 'name',
+  });
+  clients = resultList.items;
+}
+---
+
+<MainLayout title="Clients">
+  {
+    isLoggedIn ? (
+      <div>
+        <h1>Clients</h1>
+        <ul>
+          {clients.map((client) => (
+            <li>
+              <a href={`/clients/${client.id}`}>{client.name}</a>
+            </li>
+          ))}
+        </ul>
+        <a href="/clients/new">Add New Client</a>
+      </div>
+    ) : (
+      <p>
+        Please <a href="/">log in</a> to view clients.
+      </p>
+    )
+  }
+</MainLayout>

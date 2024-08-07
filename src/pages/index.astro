@@ -1,16 +1,23 @@
 ---
+import PostCalendar from '../components/PostCalendar.svelte';
+import MainLayout from '../layouts/MainLayout.astro';
+import ClientList from '../components/ClientList.svelte';
+import Login from '../components/Login.svelte';
+import { pb } from '../lib/pocketbase';
 
+const isLoggedIn = pb.authStore.isValid;
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<MainLayout>
+  <main>
+    {
+      isLoggedIn ? (
+        <p>
+          You are logged in. <a href="/clients">Go to Clients</a>
+        </p>
+      ) : (
+        <Login client:load />
+      )
+    }
+  </main>
+</MainLayout>
